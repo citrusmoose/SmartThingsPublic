@@ -199,6 +199,11 @@ metadata
 import physicalgraph.zwave.commands.doorlockv1.*
 import physicalgraph.zwave.commands.usercodev1.*
 
+private getCommandClassVersions()
+{
+	[ 0x98: 1, 0x72: 2, 0x85: 2, 0x86: 1, 0x62: 1, 0x71: 2, 0x80: 1, 0x63: 1 ]
+}
+
 def parse(String description)
 {
 	def result = null
@@ -221,7 +226,7 @@ def parse(String description)
 	}
     else
     {
-		def cmd = zwave.parse(description, [ 0x98: 1, 0x72: 2, 0x85: 2, 0x86: 1 ])
+		def cmd = zwave.parse(description, commandClassVersions)
 		if (cmd)
         {
 			result = zwaveEvent(cmd)
@@ -233,7 +238,7 @@ def parse(String description)
 
 def zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityMessageEncapsulation cmd)
 {
-	def encapsulatedCommand = cmd.encapsulatedCommand([0x62: 1, 0x71: 2, 0x80: 1, 0x85: 2, 0x63: 1, 0x98: 1, 0x86: 1])
+	def encapsulatedCommand = cmd.encapsulatedCommand(commandClassVersions)
 	// log.debug "encapsulated: $encapsulatedCommand"
 	if (encapsulatedCommand)
     {
